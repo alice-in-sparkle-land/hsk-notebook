@@ -161,16 +161,18 @@
     </div>
 
 <script>
-    // DB uses vocabList: each entry = { word, ch, vi }
-    let db = JSON.parse(localStorage.getItem('studyDB_v15')) || {};
+    // IMPORTANT: Keeping EXACT same localStorage key 'studyDB_v14' to preserve existing cache
+    let db = JSON.parse(localStorage.getItem('studyDB_v14')) || {};
     let masterDocLink = localStorage.getItem('masterDocLink') || "";
     let activeDate = null, activeType = null;
     const icons = { vocab: '☁️', manual: '🥖', textbook: '🧸', sigs: '🎀' };
 
-    // Migration: convert old 2-column format (word/sentence/note) to {word, ch, vi}
+    // SAFE MIGRATION: Convert old 2-column format to new 3-column {word, ch, vi}
+    // Preserves ALL existing data - just transforms the structure
     function migrateToThreeColumns() {
         let changed = false;
         for (let date in db) {
+            // Initialize missing structures
             if (!db[date].vocabList) { db[date].vocabList = []; changed = true; }
             if (!db[date].manual) { db[date].manual = []; changed = true; }
             if (!db[date].textbook) { db[date].textbook = { done: false, mistakes: [] }; changed = true; }
@@ -178,38 +180,40 @@
             if (!db[date].signatures) db[date].signatures = [];
             if (db[date].allDone === undefined) db[date].allDone = false;
             
-            // Transform vocab entries from old format to new 3-column
-            const newVocab = [];
-            for (let entry of db[date].vocabList) {
-                if (typeof entry === 'object') {
-                    // If already has ch & vi fields, keep as is
-                    if (entry.ch !== undefined || entry.vi !== undefined) {
+            // Only migrate if vocabList exists and isn't already in new format
+            // Check if any entry has the old structure (sentence/note instead of ch/vi)
+            const needsMigration = db[date].vocabList.some(entry => {
+                if (typeof entry !== 'object') return true;
+                // If it has 'sentence' or 'note' but no 'ch' or 'vi', it's old format
+                return (entry.sentence !== undefined || entry.note !== undefined) && (entry.ch === undefined && entry.vi === undefined);
+            });
+            
+            if (needsMigration && db[date].vocabList.length > 0) {
+                const newVocab = [];
+                for (let entry of db[date].vocabList) {
+                    if (typeof entry === 'object') {
                         newVocab.push({
                             word: entry.word || "",
-                            ch: entry.ch || entry.meaning || entry.sentence || "",
+                            // Map old 'sentence' to [ch], old 'note' to [vi] (preserves data)
+                            ch: entry.ch || entry.sentence || entry.meaning || "",
                             vi: entry.vi || entry.note || ""
                         });
                     } 
-                    else {
-                        // Old format: word, sentence, note -> map sentence to [ch], note to [vi] (flexible)
-                        let chVal = entry.sentence || entry.meaning || "";
-                        let viVal = entry.note || "";
-                        newVocab.push({
-                            word: entry.word || "",
-                            ch: chVal,
-                            vi: viVal
-                        });
+                    else if (typeof entry === 'string') {
+                        newVocab.push({ word: entry, ch: "", vi: "" });
                     }
-                } 
-                else if (typeof entry === 'string') {
-                    newVocab.push({ word: entry, ch: "", vi: "" });
                 }
+                db[date].vocabList = newVocab;
+                changed = true;
             }
-            db[date].vocabList = newVocab;
         }
-        if (changed) localStorage.setItem('studyDB_v15', JSON.stringify(db));
+        if (changed) {
+            localStorage.setItem('studyDB_v14', JSON.stringify(db));
+            console.log("Migration completed - your existing data has been upgraded to 3-column format!");
+        }
     }
     
+    // Run migration on load - your existing data will be preserved
     migrateToThreeColumns();
 
     function initHeader() {
@@ -264,7 +268,7 @@
             `;
             container.appendChild(div);
         });
-        localStorage.setItem('studyDB_v15', JSON.stringify(db));
+        localStorage.setItem('studyDB_v14', JSON.stringify(db));
     }
 
     function toggleDone(date, status) { db[date].allDone = status; render(); }
@@ -276,7 +280,6 @@
         document.getElementById('panel-title').innerHTML = type === 'vocab' ? '📖 Vocabulary (Word | [ch] | [vi])' : type.toUpperCase();
         
         if (type === 'vocab') {
-            // 3-COLUMN INTERFACE: Word, [ch], [vi]
             content.innerHTML = `
                 <div style="background:#FFF8F0; border-radius:18px; padding:12px; margin-bottom:16px;">
                     <div class="batch-buttons">
@@ -292,7 +295,6 @@
             `;
             renderVocabTable(db[date].vocabList || []);
             
-            // attach event handlers after DOM ready
             setTimeout(() => {
                 const simpleBtn = document.getElementById('simpleAddBtn');
                 const smartBtn = document.getElementById('smartPasteBtn');
@@ -314,7 +316,6 @@
         }
     }
 
-    // Process: each line becomes word only (ch and vi empty)
     function processSimpleWords() {
         const raw = document.getElementById('raw-vocab').value.trim();
         if (!raw) return;
@@ -330,7 +331,6 @@
         document.getElementById('raw-vocab').value = "";
     }
 
-    // Smart parse: supports "Word : Chinese : Vietnamese" or "Word|Chinese|Vietnamese"
     function processSmartPaste() {
         const raw = document.getElementById('raw-vocab').value.trim();
         if (!raw) return;
@@ -339,7 +339,6 @@
         
         for (let line of lines) {
             let word = "", ch = "", vi = "";
-            // detect separator: colon or vertical bar
             let separator = null;
             if (line.includes(':')) separator = ':';
             else if (line.includes('|')) separator = '|';
@@ -349,7 +348,6 @@
                 word = parts[0] || "";
                 ch = parts[1] || "";
                 vi = parts[2] || "";
-                // if only two parts: treat as Word : Chinese, Vietnamese left empty
                 if (parts.length === 2) { ch = parts[1]; vi = ""; }
             } else {
                 word = line.trim();
@@ -367,13 +365,12 @@
     function renderVocabTable(list) {
         const container = document.getElementById('vocab-table-container');
         if (!container) return;
-        container.innerHTML = `<table class="vocab-table"><thead><tr><th style="width:33%">📖 Word</th><th style="width:33%">🇨🇳 [ch]</th><th style="width:34%">🇻🇳 [vi]</th></thead><tbody id="vocab-body"></tbody></table>`;
+        container.innerHTML = `<table class="vocab-table"><thead><tr><th style="width:33%">📖 Word</th><th style="width:33%">🇨🇳 [ch]</th><th style="width:34%">🇻🇳 [vi]</th></tr></thead><tbody id="vocab-body"></tbody></table>`;
         const body = document.getElementById('vocab-body');
         if (!body) return;
         
         list.forEach((item, idx) => {
             const tr = document.createElement('tr');
-            // Word cell
             const tdWord = document.createElement('td');
             const wordInput = document.createElement('input');
             wordInput.type = 'text';
@@ -381,7 +378,7 @@
             wordInput.placeholder = 'word (e.g., 你好)';
             wordInput.onchange = (e) => { db[activeDate].vocabList[idx].word = e.target.value; };
             tdWord.appendChild(wordInput);
-            // [ch] cell - Chinese
+            
             const tdCh = document.createElement('td');
             const chInput = document.createElement('input');
             chInput.type = 'text';
@@ -389,7 +386,7 @@
             chInput.placeholder = '[ch] meaning / characters';
             chInput.onchange = (e) => { db[activeDate].vocabList[idx].ch = e.target.value; };
             tdCh.appendChild(chInput);
-            // [vi] cell - Vietnamese
+            
             const tdVi = document.createElement('td');
             const viInput = document.createElement('input');
             viInput.type = 'text';
@@ -404,7 +401,6 @@
             body.appendChild(tr);
         });
         
-        // Add small utility: remove empty rows button (optional but handy)
         if (list.length > 0) {
             const cleanerDiv = document.createElement('div');
             cleanerDiv.style.marginTop = '12px';
@@ -451,7 +447,6 @@
             db[activeDate].signatures = Array.from(document.querySelectorAll('.sig-item')).map(i => i.value); 
         }
         else if (activeType === 'vocab' && db[activeDate].vocabList) {
-            // Clean empty word rows before saving
             db[activeDate].vocabList = db[activeDate].vocabList.filter(v => v.word && v.word.trim() !== "");
         }
         render(); 
@@ -462,14 +457,12 @@
         let t = "";
         if (activeType === 'vocab') {
             const list = db[activeDate].vocabList || [];
-            // Format: each word block with line breaks and double line break between different words
             for (let i = 0; i < list.length; i++) {
                 const v = list[i];
                 if (v.word) {
                     t += `${v.word}`;
                     if (v.ch) t += `\n${v.ch}`;
                     if (v.vi) t += `\n${v.vi}`;
-                    // Add double line break between different words (two newlines), but not after the last word
                     if (i < list.length - 1) t += `\n\n`;
                 }
             }
@@ -491,11 +484,11 @@
 
     async function copyForDocs(date) {
         const d = db[date];
-        let s = `--- ${date} ---\n\n📚 VOCABULARY (Word | [ch] | [vi]):\n`;
+        let s = `--- ${date} ---\n\n📚 VOCABULARY:\n`;
         if (d.vocabList && d.vocabList.length) {
             for (let i = 0; i < d.vocabList.length; i++) {
                 const v = d.vocabList[i];
-                s += `${v.word || '–'}`;
+                s += `${v.word || '—'}`;
                 if (v.ch) s += `\n${v.ch}`;
                 if (v.vi) s += `\n${v.vi}`;
                 if (i < d.vocabList.length - 1) s += `\n\n`;
@@ -513,7 +506,7 @@
         if (d.textbook.mistakes && d.textbook.mistakes.length) s += d.textbook.mistakes.map(m => `- ${m}`).join('\n');
         else s += `—\n`;
         await navigator.clipboard.writeText(s); 
-        alert("📋 Full day copied to clipboard (line breaks between entries)!");
+        alert("📋 Full day copied!");
     }
 
     function exportData() {
@@ -557,6 +550,4 @@
 
     initHeader();
     render();
-</script>
-</body>
-</html>
+</script
