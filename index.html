@@ -15,303 +15,547 @@
             --text: #4A4A4A;
         }
 
-        body {
-            font-family: 'Quicksand', sans-serif;
-            background: var(--ghibli-paper);
-            color: var(--text);
-            padding: 10px;
-            margin: 0;
-        }
+        body { font-family: 'Quicksand', sans-serif; background: var(--ghibli-paper); color: var(--text); padding: 10px; margin: 0; }
 
-        .header-section { text-align: center; margin-bottom: 20px; }
-        .header-section h1 { font-size: 1.8em; color: #5B84B1; margin: 10px 0; }
-        .master-link { color: var(--ghibli-sky); text-decoration: none; font-weight: bold; font-size: 0.85em; }
+        /* Header & Master Link */
+        .header-section { text-align: center; margin-bottom: 15px; }
+        .header-section h1 { font-size: 1.6em; color: #5B84B1; margin: 10px 0; }
+        
+        .master-link-container { font-size: 0.85em; display: flex; justify-content: center; align-items: center; gap: 8px; min-height: 30px; }
+        .master-link { color: var(--ghibli-sky); text-decoration: none; font-weight: bold; }
+        .edit-link-icon { cursor: pointer; font-size: 0.8em; opacity: 0.6; }
+        .link-input-group input { padding: 5px; border-radius: 5px; border: 1px solid #ddd; font-size: 0.8em; width: 180px; }
 
+        /* Navigation & Buttons */
         .top-nav { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; align-items: center; }
-        .backup-tools { display: flex; gap: 8px; }
+        .nav-buttons { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; align-items: center; }
 
-        /* --- THE GRID SYSTEM --- */
-        /* This layout is shared by header and rows to ensure perfect vertical alignment */
+        button { cursor: pointer; border-radius: 10px; border: none; padding: 8px 12px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.08); font-family: inherit; transition: 0.2s; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.12); }
+        
+        .donate-btn { background: #ffdfba; font-weight: bold; font-size: 0.75em; }
+        .suggest-btn { background: #f0f0f0; border: 1px solid #ddd; display: flex; align-items: center; gap: 5px; padding: 6px 10px; }
+        .suggest-badge { font-size: 0.65em; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; color: #777; }
+
+        /* Matrix Grid System */
         .matrix-header, .row-container { 
             display: grid; 
-            /* Mobile column widths */
-            grid-template-columns: 75px repeat(3, 1fr) 65px 40px 35px; 
-            gap: 5px; 
-            align-items: center;
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            box-sizing: border-box;
+            grid-template-columns: 70px repeat(3, 1fr) 60px 35px 30px; 
+            gap: 4px; align-items: center; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box;
         }
-
-        .matrix-header { 
-            text-align: center;
-            font-weight: bold;
-            color: #aaa;
-            font-size: 0.55em;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            padding: 0 10px;
-        }
-
+        .matrix-header { text-align: center; font-weight: bold; color: #aaa; font-size: 0.5em; text-transform: uppercase; margin-bottom: 8px; padding: 0 10px; }
         .matrix { display: flex; flex-direction: column; gap: 10px; }
+        .row-container { background: white; padding: 10px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .row-done { background: #f1fcf1 !important; border: 1px solid var(--ghibli-leaf); }
 
-        .row-container {
-            background: white;
-            padding: 10px;
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-        }
-
-        .row-done { background: #f0fdf4 !important; border: 1px solid var(--ghibli-leaf); }
-
-        /* Laptop Adjustments (Screen > 992px) */
         @media (min-width: 992px) {
             body { padding: 40px; }
             .header-section h1 { font-size: 2.5em; }
-            .top-nav { flex-direction: row; justify-content: space-between; margin-bottom: 30px; }
-            
-            .matrix-header, .row-container { 
-                grid-template-columns: 120px repeat(3, 1fr) 140px 100px 60px; 
-                gap: 20px;
-                padding: 15px 30px;
-            }
-            .matrix-header { font-size: 0.8em; }
-            .row-container { border-radius: 25px; box-shadow: 0 8px 24px rgba(0,0,0,0.03); }
+            .top-nav { flex-direction: row; justify-content: space-between; }
+            .matrix-header, .row-container { grid-template-columns: 120px repeat(3, 1fr) 140px 100px 60px; gap: 20px; padding: 15px 30px; }
+            .matrix-header { font-size: 0.75em; }
         }
 
-        /* --- CELLS & ICONS --- */
-        .icon-size { font-size: 1.4em; display: block; }
+        /* Icons & Cells */
+        .icon-size { font-size: 1.3em; }
         @media (min-width: 992px) { .icon-size { font-size: 2.5em; } }
-
-        .cell { 
-            padding: 10px 2px; 
-            border-radius: 12px; 
-            text-align: center; 
-            cursor: pointer;
-            border: 1px dashed #eee;
-            background: #fafafa;
-        }
+        .cell { padding: 8px 2px; border-radius: 12px; text-align: center; cursor: pointer; border: 1px dashed #eee; background: #fafafa; }
         .cell.filled { border: 1.5px solid var(--ghibli-leaf) !important; background: #e8f5e9 !important; }
 
-        /* Buttons */
-        button { cursor: pointer; border-radius: 10px; border: none; padding: 10px 15px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); font-family: inherit; }
-        
-        .copy-btn { 
-            background: var(--ghibli-sky); 
-            color: white; 
-            font-weight: bold; 
-            width: 100%; 
-            font-size: 0.6em; /* Mobile Font */
-            padding: 8px 1px; 
-            text-transform: uppercase;
-        }
+        .copy-btn { background: var(--ghibli-sky); color: white; font-weight: bold; width: 100%; font-size: 0.55em; padding: 8px 1px; text-transform: uppercase; }
+        .sig-copy-btn { background: var(--ghibli-gold); font-size: 0.8em; padding: 2px 4px; border-radius: 4px; }
+        .done-check { width: 18px; height: 18px; cursor: pointer; accent-color: var(--ghibli-leaf); }
 
-        .sig-copy-btn { background: var(--ghibli-gold); font-size: 0.8em; padding: 2px 4px; border-radius: 6px; }
-
-        @media (min-width: 992px) {
-            .copy-btn { font-size: 0.9em; padding: 12px 20px; }
-        }
-
-        /* Checkbox */
-        .done-check { width: 20px; height: 20px; cursor: pointer; accent-color: var(--ghibli-leaf); margin: 0 auto; display: block; }
-        @media (min-width: 992px) { .done-check { width: 28px; height: 28px; } }
-
-        /* Input Panel Overlay */
-        #input-panel { 
+        /* Modals & Panels */
+        .modal-overlay { 
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: white; padding: 20px; z-index: 2000; 
-            display: none; overflow-y: auto;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
+            z-index: 3000; display: none; justify-content: center; align-items: center;
         }
-        @media (min-width: 992px) {
-            #input-panel { position: relative; margin-top: 30px; border-radius: 25px; border: 3px solid var(--ghibli-sky); }
+        .modal-content { 
+            background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px;
+            text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
+        
+        #input-panel { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: white; padding: 20px; z-index: 2000; display: none; overflow-y: auto; }
+        @media (min-width: 992px) { #input-panel { position: relative; margin-top: 30px; border-radius: 25px; border: 3px solid var(--ghibli-sky); box-shadow: 0 10px 30px rgba(0,0,0,0.05); } }
 
-        textarea, input[type="text"] { width: 100%; border: 1px solid #ddd; border-radius: 10px; padding: 12px; margin-bottom: 10px; font-size: 16px; }
+        textarea, input[type="text"] { width: 100%; border: 1px solid #ddd; border-radius: 10px; padding: 12px; margin-bottom: 10px; font-size: 16px; box-sizing: border-box; }
+        
+        /* 3-Column Vocab Table - Word | [ch] | [vi] */
+        .vocab-table { width: 100%; border-collapse: collapse; table-layout: fixed; margin-top: 10px; background: #FFFDF7; border-radius: 14px; overflow: hidden; }
+        .vocab-table th { background: #FFE9D6; color: #7B5A47; font-weight: 700; font-size: 0.75em; text-transform: uppercase; padding: 10px 6px; letter-spacing: 0.5px; text-align: left; border-bottom: 1px solid #F3E5D8; }
+        .vocab-table th:nth-child(1) { background: #FFE2CC; }
+        .vocab-table th:nth-child(2) { background: #FFDBC2; color: #B4452C; }
+        .vocab-table th:nth-child(3) { background: #FFD4B8; color: #2A7A62; }
+        .vocab-table td { padding: 6px 4px; border-bottom: 1px solid #F3E5D8; }
+        .vocab-table input { width: 100%; border: none; background: transparent; border-bottom: 1px solid #f0e0d0; padding: 8px 4px; font-size: 0.9em; font-family: 'Quicksand', sans-serif; transition: 0.15s; border-radius: 0; }
+        .vocab-table input:focus { outline: none; border-bottom-color: var(--ghibli-leaf); background: #FFF9F0; }
+        .vocab-table input::placeholder { color: #ccc; font-size: 0.8em; }
+        .batch-buttons { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+        .batch-btn { background: #f5efe7; font-size: 0.75rem; padding: 6px 12px; box-shadow: none; border-radius: 20px; }
+        .note-tip { font-size: 0.7rem; color: #B58B6F; margin-top: 8px; text-align: right; }
     </style>
 </head>
 <body>
 
     <div class="header-section">
         <h1>☁️ My Study Journal ☁️</h1>
-        <a href="https://docs.google.com/document/d/1uahfr7YM9Ydh6sbHf7Ga7tESNAulfhAHISCa7kyHeII/edit?usp=sharing" target="_blank" class="master-link">📖 Master Document</a>
+        <div id="master-link-area" class="master-link-container"></div>
     </div>
 
     <div class="top-nav">
-        <button onclick="addNewDate()" style="background: var(--ghibli-accent); font-weight: bold;">🌱 Plant a New Day</button>
-        <div class="backup-tools">
-            <button onclick="exportData()">📤 Export</button>
-            <button onclick="document.getElementById('importFile').click()">📥 Import</button>
+        <div class="nav-buttons">
+            <button onclick="addNewDate()" style="background: var(--ghibli-accent); font-weight: bold;">🌱 New Day</button>
+            <button onclick="toggleModal('donate-modal', true)" class="donate-btn">☕ Donate</button>
+            <button onclick="toggleModal('suggest-modal', true)" class="suggest-btn">
+                <span>💬</span><span class="suggest-badge">Suggest</span>
+            </button>
+        </div>
+        <div class="nav-buttons">
+            <button onclick="exportData()" title="Export JSON">📤</button>
+            <button onclick="document.getElementById('importFile').click()" title="Import JSON">📥</button>
             <input type="file" id="importFile" style="display:none" onchange="importData(event)">
         </div>
     </div>
 
     <div class="matrix-header">
-        <div>Date</div>
-        <div>Vocab</div>
-        <div>Ex</div>
-        <div>Book</div>
-        <div>Sync</div>
-        <div><button class="sig-copy-btn" onclick="copyAllSignatures()">📋</button></div>
-        <div>Done</div>
+        <div>Date</div><div>Vocab</div><div>Ex</div><div>Book</div><div>Sync</div><div><button class="sig-copy-btn" onclick="copyAllSignatures()">📋</button></div><div>Done</div>
     </div>
 
     <div class="matrix" id="matrix"></div>
 
+    <div id="donate-modal" class="modal-overlay" onclick="toggleModal('donate-modal', false)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h3 style="margin-top:0;">Buy me a coffee? ☕</h3>
+            <div style="background: #f9f9f9; padding: 15px; border-radius: 12px; margin: 20px 0; font-size: 0.9em;">
+                <strong>Banking Info:</strong><br>
+                Timo by BVBank:
+                9021 8333 90823
+                Cao Ngoc Quynh
+            </div>
+            <button onclick="toggleModal('donate-modal', false)" style="background: var(--ghibli-sky); color: white; width: 100%; font-weight:bold;">Close</button>
+        </div>
+    </div>
+
+    <div id="suggest-modal" class="modal-overlay" onclick="toggleModal('suggest-modal', false)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h3 style="margin-top:0; color: #5B84B1;">Feature Request 💡</h3>
+            <p style="font-size: 0.85em; color: #777; margin-bottom: 15px;">Have an idea to make this tool better? Describe it below!</p>
+            <textarea id="feature-idea" placeholder="I would love to see..." style="height: 120px;"></textarea>
+            <button onclick="sendSuggestion()" style="background: var(--ghibli-leaf); color: white; width: 100%; margin-bottom: 10px; font-weight: bold;">📧 Send to Mẫn</button>
+            <button onclick="toggleModal('suggest-modal', false)" style="background: #eee; width: 100%;">Maybe Later</button>
+        </div>
+    </div>
+
     <div id="input-panel">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h2 id="panel-title" style="margin:0; color:#5B84B1; font-size: 1.2em;">Section</h2>
-            <button onclick="copyCurrentPart()" style="background:var(--ghibli-accent);">🐾 Copy</button>
+            <h2 id="panel-title" style="margin:0; color:#5B84B1; font-size: 1.2em;">Editor</h2>
+            <button onclick="copyCurrentPart()" style="background:var(--ghibli-accent);">🐾 Copy Part</button>
         </div>
         <div id="panel-content"></div>
         <div style="margin-top:20px; display:flex; gap:10px;">
-            <button onclick="saveAndClose()" style="background: var(--ghibli-leaf); flex:2; font-weight:bold;">🌸 Save</button>
-            <button onclick="document.getElementById('input-panel').style.display='none'" style="background: #eee; flex:1;">Close</button>
+            <button onclick="saveAndClose()" style="background: var(--ghibli-leaf); flex:2; font-weight:bold;">🌸 Save Progress</button>
+            <button onclick="togglePanel(false)" style="background: #eee; flex:1;">Close</button>
         </div>
     </div>
 
 <script>
-    // Database Key v10 for the alignment fix
-    let db = JSON.parse(localStorage.getItem('studyDB_v10')) || {};
+    // DB uses vocabList: each entry = { word, ch, vi }
+    let db = JSON.parse(localStorage.getItem('studyDB_v15')) || {};
+    let masterDocLink = localStorage.getItem('masterDocLink') || "";
     let activeDate = null, activeType = null;
     const icons = { vocab: '☁️', manual: '🥖', textbook: '🧸', sigs: '🎀' };
+
+    // Migration: convert old 2-column format (word/sentence/note) to {word, ch, vi}
+    function migrateToThreeColumns() {
+        let changed = false;
+        for (let date in db) {
+            if (!db[date].vocabList) { db[date].vocabList = []; changed = true; }
+            if (!db[date].manual) { db[date].manual = []; changed = true; }
+            if (!db[date].textbook) { db[date].textbook = { done: false, mistakes: [] }; changed = true; }
+            if (!db[date].textbook.mistakes) db[date].textbook.mistakes = [];
+            if (!db[date].signatures) db[date].signatures = [];
+            if (db[date].allDone === undefined) db[date].allDone = false;
+            
+            // Transform vocab entries from old format to new 3-column
+            const newVocab = [];
+            for (let entry of db[date].vocabList) {
+                if (typeof entry === 'object') {
+                    // If already has ch & vi fields, keep as is
+                    if (entry.ch !== undefined || entry.vi !== undefined) {
+                        newVocab.push({
+                            word: entry.word || "",
+                            ch: entry.ch || entry.meaning || entry.sentence || "",
+                            vi: entry.vi || entry.note || ""
+                        });
+                    } 
+                    else {
+                        // Old format: word, sentence, note -> map sentence to [ch], note to [vi] (flexible)
+                        let chVal = entry.sentence || entry.meaning || "";
+                        let viVal = entry.note || "";
+                        newVocab.push({
+                            word: entry.word || "",
+                            ch: chVal,
+                            vi: viVal
+                        });
+                    }
+                } 
+                else if (typeof entry === 'string') {
+                    newVocab.push({ word: entry, ch: "", vi: "" });
+                }
+            }
+            db[date].vocabList = newVocab;
+        }
+        if (changed) localStorage.setItem('studyDB_v15', JSON.stringify(db));
+    }
+    
+    migrateToThreeColumns();
+
+    function initHeader() {
+        const area = document.getElementById('master-link-area');
+        if (!masterDocLink) {
+            area.innerHTML = `<div class="link-input-group"><input type="text" id="new-master-link" placeholder="GDocs link..."><button onclick="saveMasterLink()">💾</button></div>`;
+        } else {
+            area.innerHTML = `<a href="${masterDocLink}" target="_blank" class="master-link">📖 Master Document</a><span class="edit-link-icon" onclick="resetMasterLink()">✏️</span>`;
+        }
+    }
+
+    function saveMasterLink() {
+        const val = document.getElementById('new-master-link').value.trim();
+        if (val) { masterDocLink = val; localStorage.setItem('masterDocLink', val); initHeader(); }
+    }
+
+    function resetMasterLink() { masterDocLink = ""; localStorage.removeItem('masterDocLink'); initHeader(); }
+    function toggleModal(id, show) { document.getElementById(id).style.display = show ? 'flex' : 'none'; }
+    function togglePanel(show) { document.getElementById('input-panel').style.display = show ? 'block' : 'none'; }
+
+    function sendSuggestion() {
+        const idea = document.getElementById('feature-idea').value.trim();
+        if (idea) {
+            const recipient = "thuyman.cao08@gmail.com";
+            const subject = encodeURIComponent("Suggestion for My study note");
+            const body = encodeURIComponent(idea);
+            window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`;
+            navigator.clipboard.writeText(idea);
+            alert("Email app opening... Idea also copied to clipboard! ✨");
+            document.getElementById('feature-idea').value = "";
+            toggleModal('suggest-modal', false);
+        }
+    }
 
     function render() {
         const container = document.getElementById('matrix');
         container.innerHTML = '';
-
         Object.keys(db).sort().reverse().forEach(date => {
             const row = db[date];
             const isDone = row.allDone || false;
             const div = document.createElement('div');
             div.className = `row-container ${isDone ? 'row-done' : ''}`;
+            const hasVocab = row.vocabList && row.vocabList.length > 0 && row.vocabList.some(v => v.word && v.word.trim() !== "");
             div.innerHTML = `
-                <div style="text-align:center; font-weight:bold; color:#888; font-size:0.65em;">${date}</div>
-                <div class="cell ${row.vocabList && row.vocabList.length ? 'filled' : ''}" onclick="openEditor('${date}', 'vocab')">
-                    <span class="icon-size">${icons.vocab}</span>
-                </div>
-                <div class="cell ${row.manual && row.manual.length ? 'filled' : ''}" onclick="openEditor('${date}', 'manual')">
-                    <span class="icon-size">${icons.manual}</span>
-                </div>
-                <div class="cell ${row.textbook && row.textbook.done ? 'filled' : ''}" onclick="openEditor('${date}', 'textbook')">
-                    <span class="icon-size">${icons.textbook}</span>
-                </div>
-                <div>
-                    <button class="copy-btn" onclick="copyForDocs('${date}')">🚀 Sync</button>
-                </div>
-                <div class="cell ${row.signatures && row.signatures.length ? 'filled' : ''}" onclick="openEditor('${date}', 'signatures')">
-                    <span class="icon-size">${icons.sigs}</span>
-                </div>
-                <div style="text-align:center;">
-                    <input type="checkbox" class="done-check" ${isDone ? 'checked' : ''} onchange="toggleDone('${date}', this.checked)">
-                </div>
+                <div style="text-align:center; font-weight:bold; color:#888; font-size:0.6em;">${date}</div>
+                <div class="cell ${hasVocab ? 'filled' : ''}" onclick="openEditor('${date}', 'vocab')"><span class="icon-size">${icons.vocab}</span></div>
+                <div class="cell ${row.manual?.length ? 'filled' : ''}" onclick="openEditor('${date}', 'manual')"><span class="icon-size">${icons.manual}</span></div>
+                <div class="cell ${row.textbook?.done ? 'filled' : ''}" onclick="openEditor('${date}', 'textbook')"><span class="icon-size">${icons.textbook}</span></div>
+                <div><button class="copy-btn" onclick="copyForDocs('${date}')">🚀 Sync</button></div>
+                <div class="cell ${row.signatures?.length ? 'filled' : ''}" onclick="openEditor('${date}', 'signatures')"><span class="icon-size">${icons.sigs}</span></div>
+                <div style="text-align:center;"><input type="checkbox" class="done-check" ${isDone ? 'checked' : ''} onchange="toggleDone('${date}', this.checked)"></div>
             `;
             container.appendChild(div);
         });
-        localStorage.setItem('studyDB_v10', JSON.stringify(db));
+        localStorage.setItem('studyDB_v15', JSON.stringify(db));
     }
 
-    function toggleDone(date, status) {
-        db[date].allDone = status;
-        render();
-    }
+    function toggleDone(date, status) { db[date].allDone = status; render(); }
 
     function openEditor(date, type) {
         activeDate = date; activeType = type;
-        const panel = document.getElementById('input-panel');
+        togglePanel(true);
         const content = document.getElementById('panel-content');
-        document.getElementById('panel-title').innerText = type.toUpperCase();
-        panel.style.display = 'block';
-        content.innerHTML = '';
-
+        document.getElementById('panel-title').innerHTML = type === 'vocab' ? '📖 Vocabulary (Word | [ch] | [vi])' : type.toUpperCase();
+        
         if (type === 'vocab') {
-            content.innerHTML = `<textarea id="raw-vocab" placeholder="Paste words..."></textarea><button onclick="processVocab()" style="width:100%; background:var(--ghibli-sky); color:white; margin-bottom:15px;">✨ Add</button><div id="vocab-table-container"></div>`;
+            // 3-COLUMN INTERFACE: Word, [ch], [vi]
+            content.innerHTML = `
+                <div style="background:#FFF8F0; border-radius:18px; padding:12px; margin-bottom:16px;">
+                    <div class="batch-buttons">
+                        <button id="simpleAddBtn" class="batch-btn">📝 Add as Words Only</button>
+                        <button id="smartPasteBtn" class="batch-btn">✨ Paste: Word : Ch : Vi</button>
+                        <button onclick="addEmptyVocabRow()" class="batch-btn">➕ Add Row</button>
+                    </div>
+                    <textarea id="raw-vocab" rows="3" placeholder="Paste vocabulary in any format:&#10;苹果 : 苹果 : quả táo&#10;学习 : học tập&#10;Or one word per line for quick entry" style="font-size:0.85rem;"></textarea>
+                    <div class="note-tip">💡 Tip: Use colons (:) or vertical bars (|) to separate Word | [ch] | [vi]</div>
+                </div>
+                <div id="vocab-table-container"></div>
+                <div class="note-tip" style="margin-top:10px;">✏️ Click any field to edit | Rows with empty Word will be auto-cleaned on save.</div>
+            `;
             renderVocabTable(db[date].vocabList || []);
-        } else if (type === 'manual') {
-            content.innerHTML = `<div id="manual-list"></div><button onclick="addManualRow()" style="width:100%;">+ Add Row</button>`;
-            if(db[date].manual) db[date].manual.forEach(ex => addManualRow(ex.q, ex.a));
-        } else if (type === 'textbook') {
-            content.innerHTML = `<label><input type="checkbox" id="tb-done" ${db[date].textbook.done ? 'checked' : ''}> Finished</label><div id="mistake-list" style="margin-top:15px;"></div><button onclick="addMistakeRow()" style="width:100%;">+ Note</button>`;
-            if(db[date].textbook.mistakes) db[date].textbook.mistakes.forEach(m => addMistakeRow(m));
-        } else if (type === 'signatures') {
-            content.innerHTML = `<div id="sig-list"></div><button onclick="addSigRow()">+ Add Note</button>`;
-            if(db[date].signatures) db[date].signatures.forEach(s => addSigRow(s));
+            
+            // attach event handlers after DOM ready
+            setTimeout(() => {
+                const simpleBtn = document.getElementById('simpleAddBtn');
+                const smartBtn = document.getElementById('smartPasteBtn');
+                if (simpleBtn) simpleBtn.onclick = () => processSimpleWords();
+                if (smartBtn) smartBtn.onclick = () => processSmartPaste();
+            }, 10);
+        } 
+        else if (type === 'manual') {
+            content.innerHTML = `<div id="manual-list"></div><button onclick="addManualRow()" style="width:100%;">+ Row</button>`;
+            db[date].manual?.forEach(ex => addManualRow(ex.q, ex.a));
+        } 
+        else if (type === 'textbook') {
+            content.innerHTML = `<label><input type="checkbox" id="tb-done" ${db[date].textbook.done ? 'checked' : ''}> Finished</label><div id="mistake-list" style="margin-top:15px;"></div><button onclick="addMistakeRow()">+ Note</button>`;
+            db[date].textbook.mistakes?.forEach(m => addMistakeRow(m));
+        } 
+        else if (type === 'signatures') {
+            content.innerHTML = `<div id="sig-list"></div><button onclick="addSigRow()">+ Note</button>`;
+            db[date].signatures?.forEach(s => addSigRow(s));
         }
     }
 
-    function processVocab() {
+    // Process: each line becomes word only (ch and vi empty)
+    function processSimpleWords() {
         const raw = document.getElementById('raw-vocab').value.trim();
-        if(!db[activeDate].vocabList) db[activeDate].vocabList = [];
-        raw.split('\n').filter(w => w.trim()).forEach(w => db[activeDate].vocabList.push({word: w.trim(), sentence: ""}));
+        if (!raw) return;
+        const lines = raw.split('\n').filter(l => l.trim().length > 0);
+        if (!db[activeDate].vocabList) db[activeDate].vocabList = [];
+        for (let line of lines) {
+            const cleanWord = line.trim();
+            if (cleanWord) {
+                db[activeDate].vocabList.push({ word: cleanWord, ch: "", vi: "" });
+            }
+        }
+        renderVocabTable(db[activeDate].vocabList);
+        document.getElementById('raw-vocab').value = "";
+    }
+
+    // Smart parse: supports "Word : Chinese : Vietnamese" or "Word|Chinese|Vietnamese"
+    function processSmartPaste() {
+        const raw = document.getElementById('raw-vocab').value.trim();
+        if (!raw) return;
+        const lines = raw.split('\n').filter(l => l.trim().length > 0);
+        if (!db[activeDate].vocabList) db[activeDate].vocabList = [];
+        
+        for (let line of lines) {
+            let word = "", ch = "", vi = "";
+            // detect separator: colon or vertical bar
+            let separator = null;
+            if (line.includes(':')) separator = ':';
+            else if (line.includes('|')) separator = '|';
+            
+            if (separator) {
+                const parts = line.split(separator).map(p => p.trim());
+                word = parts[0] || "";
+                ch = parts[1] || "";
+                vi = parts[2] || "";
+                // if only two parts: treat as Word : Chinese, Vietnamese left empty
+                if (parts.length === 2) { ch = parts[1]; vi = ""; }
+            } else {
+                word = line.trim();
+                ch = "";
+                vi = "";
+            }
+            if (word !== "") {
+                db[activeDate].vocabList.push({ word: word, ch: ch, vi: vi });
+            }
+        }
         renderVocabTable(db[activeDate].vocabList);
         document.getElementById('raw-vocab').value = "";
     }
 
     function renderVocabTable(list) {
         const container = document.getElementById('vocab-table-container');
-        container.innerHTML = `<table><tbody id="vocab-body"></tbody></table>`;
+        if (!container) return;
+        container.innerHTML = `<table class="vocab-table"><thead><tr><th style="width:33%">📖 Word</th><th style="width:33%">🇨🇳 [ch]</th><th style="width:34%">🇻🇳 [vi]</th></thead><tbody id="vocab-body"></tbody></table>`;
         const body = document.getElementById('vocab-body');
-        list.forEach((item, index) => {
+        if (!body) return;
+        
+        list.forEach((item, idx) => {
             const tr = document.createElement('tr');
-            tr.innerHTML = `<td><input type="text" value="${item.word}" onchange="db['${activeDate}'].vocabList[${index}].word=this.value" style="font-weight:bold;"></td><td><input type="text" value="${item.sentence}" onchange="db['${activeDate}'].vocabList[${index}].sentence=this.value" placeholder="..."></td>`;
+            // Word cell
+            const tdWord = document.createElement('td');
+            const wordInput = document.createElement('input');
+            wordInput.type = 'text';
+            wordInput.value = item.word || '';
+            wordInput.placeholder = 'word (e.g., 你好)';
+            wordInput.onchange = (e) => { db[activeDate].vocabList[idx].word = e.target.value; };
+            tdWord.appendChild(wordInput);
+            // [ch] cell - Chinese
+            const tdCh = document.createElement('td');
+            const chInput = document.createElement('input');
+            chInput.type = 'text';
+            chInput.value = item.ch || '';
+            chInput.placeholder = '[ch] meaning / characters';
+            chInput.onchange = (e) => { db[activeDate].vocabList[idx].ch = e.target.value; };
+            tdCh.appendChild(chInput);
+            // [vi] cell - Vietnamese
+            const tdVi = document.createElement('td');
+            const viInput = document.createElement('input');
+            viInput.type = 'text';
+            viInput.value = item.vi || '';
+            viInput.placeholder = '[vi] translation';
+            viInput.onchange = (e) => { db[activeDate].vocabList[idx].vi = e.target.value; };
+            tdVi.appendChild(viInput);
+            
+            tr.appendChild(tdWord);
+            tr.appendChild(tdCh);
+            tr.appendChild(tdVi);
             body.appendChild(tr);
         });
+        
+        // Add small utility: remove empty rows button (optional but handy)
+        if (list.length > 0) {
+            const cleanerDiv = document.createElement('div');
+            cleanerDiv.style.marginTop = '12px';
+            cleanerDiv.style.textAlign = 'right';
+            const cleanBtn = document.createElement('button');
+            cleanBtn.innerText = '🗑️ Remove rows with empty Word';
+            cleanBtn.style.background = '#f9e5d4';
+            cleanBtn.style.fontSize = '0.7rem';
+            cleanBtn.style.padding = '5px 12px';
+            cleanBtn.style.borderRadius = '20px';
+            cleanBtn.onclick = () => {
+                db[activeDate].vocabList = db[activeDate].vocabList.filter(v => v.word && v.word.trim() !== "");
+                renderVocabTable(db[activeDate].vocabList);
+            };
+            cleanerDiv.appendChild(cleanBtn);
+            container.appendChild(cleanerDiv);
+        }
+    }
+    
+    function addEmptyVocabRow() {
+        if (!db[activeDate].vocabList) db[activeDate].vocabList = [];
+        db[activeDate].vocabList.push({ word: "", ch: "", vi: "" });
+        renderVocabTable(db[activeDate].vocabList);
     }
 
     function addManualRow(q='', a='') {
         const div = document.createElement('div'); div.className = "manual-entry";
-        div.innerHTML = `<input type="text" class="q" placeholder="Q" value="${q}"><input type="text" class="a" placeholder="A" value="${a}">`;
+        div.innerHTML = `<input type="text" class="q" placeholder="Q" value="${escapeHtml(q)}"><input type="text" class="a" placeholder="A" value="${escapeHtml(a)}">`;
         document.getElementById('manual-list').appendChild(div);
     }
     function addMistakeRow(v='') { const i = document.createElement('input'); i.type="text"; i.className="mistake-item"; i.value=v; document.getElementById('mistake-list').appendChild(i); }
     function addSigRow(v='') { const i = document.createElement('input'); i.type="text"; i.className="sig-item"; i.value=v; document.getElementById('sig-list').appendChild(i); }
+    function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
 
     function saveAndClose() {
-        if (activeType === 'manual') db[activeDate].manual = Array.from(document.querySelectorAll('.manual-entry')).map(r => ({q: r.querySelector('.q').value, a: r.querySelector('.a').value}));
-        else if (activeType === 'textbook') { db[activeDate].textbook.done = document.getElementById('tb-done').checked; db[activeDate].textbook.mistakes = Array.from(document.querySelectorAll('.mistake-item')).map(i => i.value); }
-        else if (activeType === 'signatures') db[activeDate].signatures = Array.from(document.querySelectorAll('.sig-item')).map(i => i.value);
-        render(); document.getElementById('input-panel').style.display = 'none';
+        if (activeType === 'manual') {
+            db[activeDate].manual = Array.from(document.querySelectorAll('.manual-entry')).map(r => ({q: r.querySelector('.q').value, a: r.querySelector('.a').value}));
+        }
+        else if (activeType === 'textbook') { 
+            db[activeDate].textbook.done = document.getElementById('tb-done')?.checked || false; 
+            db[activeDate].textbook.mistakes = Array.from(document.querySelectorAll('.mistake-item')).map(i => i.value); 
+        }
+        else if (activeType === 'signatures') { 
+            db[activeDate].signatures = Array.from(document.querySelectorAll('.sig-item')).map(i => i.value); 
+        }
+        else if (activeType === 'vocab' && db[activeDate].vocabList) {
+            // Clean empty word rows before saving
+            db[activeDate].vocabList = db[activeDate].vocabList.filter(v => v.word && v.word.trim() !== "");
+        }
+        render(); 
+        togglePanel(false);
     }
 
     async function copyCurrentPart() {
         let t = "";
-        if(activeType === 'vocab') db[activeDate].vocabList.forEach(v => t += `${v.word}\n${v.sentence}\n\n`);
-        else if(activeType === 'manual') Array.from(document.querySelectorAll('.manual-entry')).forEach(r => t += `Q: ${r.querySelector('.q').value}\nA: ${r.querySelector('.a').value}\n\n`);
-        else if(activeType === 'signatures') t = db[activeDate].signatures.join('\n');
-        await navigator.clipboard.writeText(t); alert("Part copied!");
+        if (activeType === 'vocab') {
+            const list = db[activeDate].vocabList || [];
+            // Format: each word block with line breaks and double line break between different words
+            for (let i = 0; i < list.length; i++) {
+                const v = list[i];
+                if (v.word) {
+                    t += `${v.word}`;
+                    if (v.ch) t += `\n${v.ch}`;
+                    if (v.vi) t += `\n${v.vi}`;
+                    // Add double line break between different words (two newlines), but not after the last word
+                    if (i < list.length - 1) t += `\n\n`;
+                }
+            }
+        }
+        else if (activeType === 'manual') {
+            const manualList = db[activeDate].manual || [];
+            for (let i = 0; i < manualList.length; i++) {
+                const r = manualList[i];
+                t += `Q: ${r.q}\nA: ${r.a}`;
+                if (i < manualList.length - 1) t += `\n\n`;
+            }
+        }
+        else if (activeType === 'signatures') {
+            t = (db[activeDate].signatures || []).join('\n\n');
+        }
+        await navigator.clipboard.writeText(t); 
+        alert("✨ Section copied with line breaks!");
     }
 
     async function copyForDocs(date) {
         const d = db[date];
-        let s = `--- ${date} ---\n\nVOCABULARY:\n`;
-        d.vocabList.forEach(v => s += `${v.word}\n${v.sentence}\n\n`);
-        s += `\nMANUAL EXERCISES:\n`;
-        d.manual.forEach(m => s += `Q: ${m.q}\nA: ${m.a}\n\n`);
-        s += `TEXTBOOK:\nDone: ${d.textbook.done ? 'Yes' : 'No'}\nNotes:\n` + d.textbook.mistakes.join('\n');
-        await navigator.clipboard.writeText(s); alert("Ready!");
+        let s = `--- ${date} ---\n\n📚 VOCABULARY (Word | [ch] | [vi]):\n`;
+        if (d.vocabList && d.vocabList.length) {
+            for (let i = 0; i < d.vocabList.length; i++) {
+                const v = d.vocabList[i];
+                s += `${v.word || '–'}`;
+                if (v.ch) s += `\n${v.ch}`;
+                if (v.vi) s += `\n${v.vi}`;
+                if (i < d.vocabList.length - 1) s += `\n\n`;
+            }
+        } else s += `(no vocabulary)\n`;
+        s += `\n✍️ MANUAL EXERCISES:\n`;
+        if (d.manual && d.manual.length) {
+            for (let i = 0; i < d.manual.length; i++) {
+                const m = d.manual[i];
+                s += `Q: ${m.q}\nA: ${m.a}`;
+                if (i < d.manual.length - 1) s += `\n\n`;
+            }
+        } else s += `—\n`;
+        s += `\n📘 TEXTBOOK:\nDone: ${d.textbook.done ? 'Yes ✔️' : 'No'}\nMistakes/Notes:\n`;
+        if (d.textbook.mistakes && d.textbook.mistakes.length) s += d.textbook.mistakes.map(m => `- ${m}`).join('\n');
+        else s += `—\n`;
+        await navigator.clipboard.writeText(s); 
+        alert("📋 Full day copied to clipboard (line breaks between entries)!");
     }
 
     function exportData() {
-        const link = document.createElement('a'); link.href = 'data:application/json;charset=utf-8,'+ encodeURIComponent(JSON.stringify(db));
-        link.download = 'study-journal-backup.json'; link.click();
+        const link = document.createElement('a'); 
+        link.href = 'data:application/json;charset=utf-8,'+ encodeURIComponent(JSON.stringify(db));
+        link.download = 'study-backup.json'; 
+        link.click();
     }
 
     function importData(e) {
-        const r = new FileReader(); r.onload = (ev) => { db = JSON.parse(ev.target.result); render(); }; r.readAsText(e.target.files[0]);
+        const r = new FileReader(); 
+        r.onload = (ev) => { 
+            db = JSON.parse(ev.target.result); 
+            migrateToThreeColumns();
+            render(); 
+        }; 
+        r.readAsText(e.target.files[0]);
     }
 
     function addNewDate() {
         const d = prompt("Date (YYYY-MM-DD)?", new Date().toISOString().split('T')[0]);
-        if(d && !db[d]) { db[d] = { vocabList: [], manual: [], textbook: { done: false, mistakes: [] }, signatures: [], allDone: false }; render(); }
+        if(d && !db[d]) { 
+            db[d] = { vocabList: [], manual: [], textbook: { done: false, mistakes: [] }, signatures: [], allDone: false }; 
+            render(); 
+        } else if(d && db[d]) alert("Day already exists!");
     }
 
     async function copyAllSignatures() {
         let all = "";
-        Object.keys(db).sort().reverse().forEach(d => { if(db[d].signatures.length) all += `[${d}]\n${db[d].signatures.join('\n')}\n\n`; });
-        await navigator.clipboard.writeText(all); alert("All notes copied!");
+        const dates = Object.keys(db).sort().reverse();
+        for (let i = 0; i < dates.length; i++) {
+            const d = dates[i];
+            if(db[d].signatures?.length) {
+                all += `[${d}]\n${db[d].signatures.join('\n')}`;
+                if (i < dates.length - 1) all += `\n\n`;
+            }
+        }
+        await navigator.clipboard.writeText(all); 
+        alert("📜 All signature notes copied!");
     }
 
+    initHeader();
     render();
 </script>
 </body>
